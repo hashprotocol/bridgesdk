@@ -1,11 +1,4 @@
-# Zero Exchange SDK
-
-[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-[![Actions Status](https://github.com/zeroexchange/sdk/workflows/CI/badge.svg)](https://github.com/zeroexchange/sdk)
-[![npm version](https://img.shields.io/npm/v/@zeroexchange/sdk/latest.svg)](https://www.npmjs.com/package/@zeroexchange/sdk/v/latest)
-[![npm bundle size (scoped version)](https://img.shields.io/bundlephobia/minzip/@zeroexchange/sdk/latest.svg)](https://bundlephobia.com/result?p=@zeroexchange/sdk@latest)
-
-In-depth documentation on this SDK is available at [zero.exchange](https://docs.zero.exchange/getting-started/).
+# Hashbridge SDK
 
 ## Running tests
 
@@ -14,7 +7,7 @@ To run the tests, follow these steps. You must have at least node v10 and [yarn]
 First clone the repository:
 
 ```sh
-git clone https://github.com/zeroexchange/sdk.git
+git clone https://github.com/hashprotocol/bridgesdk.git
 ```
 
 Move into the sdk working directory

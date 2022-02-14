@@ -1,0 +1,97 @@
+Arguments: 
+  /Users/cryptodelic/.nvm/versions/node/v14.17.4/bin/node /opt/homebrew/Cellar/yarn/1.22.17_2/libexec/bin/yarn.js publish
+
+PATH: 
+  /Users/cryptodelic/.nvm/versions/node/v14.17.4/bin:/Users/cryptodelic/node:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/cryptodelic/.npm-global/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Users/cryptodelic/.sdkman/candidates/gradle/current/bin:/Users/cryptodelic/Downloads/google-cloud-sdk/bin:/Users/cryptodelic/.nvm/versions/node/v14.17.4/bin:/opt/homebrew/opt/go@1.16/bin:/opt/homebrew/opt/node@16/bin:/Users/cryptodelic/perl5/bin:/opt/homebrew/opt/openssl@3/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/cryptodelic/.cargo/bin:/Users/cryptodelic/.npm-global/bin:/Users/cryptodelic/flutter/bin:/Users/cryptodelic/flutter:/Users/cryptodelic/Library/Python/3.8/bin:/bin:/bin:/Users/cryptodelic/flutter:/Users/cryptodelic/flutter/bin
+
+Yarn version: 
+  1.22.17
+
+Node version: 
+  14.17.4
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/-/user/org.couchdb.user:hashbridge: failed to authenticate: Could not authenticate hashbridge: bad password
+      at Request.params.callback [as _callback] (/opt/homebrew/Cellar/yarn/1.22.17_2/libexec/lib/cli.js:67029:18)
+      at Request.self.callback (/opt/homebrew/Cellar/yarn/1.22.17_2/libexec/lib/cli.js:140883:22)
+      at Request.emit (events.js:400:28)
+      at Request.<anonymous> (/opt/homebrew/Cellar/yarn/1.22.17_2/libexec/lib/cli.js:141855:10)
+      at Request.emit (events.js:400:28)
+      at IncomingMessage.<anonymous> (/opt/homebrew/Cellar/yarn/1.22.17_2/libexec/lib/cli.js:141777:12)
+      at Object.onceWrapper (events.js:519:28)
+      at IncomingMessage.emit (events.js:412:35)
+      at endReadableNT (internal/streams/readable.js:1317:12)
+      at processTicksAndRejections (internal/process/task_queues.js:82:21)
+
+npm manifest: 
+  {
+      "name": "@hashprotocol/bridgesdk",
+      "license": "MIT",
+      "version": "0.0.1",
+      "description": "🏂 An SDK for building applications on top of Hashbridge.",
+      "main": "dist/index.js",
+      "typings": "dist/index.d.ts",
+      "files": [
+          "dist"
+      ],
+      "repository": "https://github.com/maexx393/bridgesdk.git",
+      "keywords": [
+          "hashbridge",
+          "hash",
+          "hashprotocol",
+          "avalanche",
+          "uniswap"
+      ],
+      "module": "dist/sdk.esm.js",
+      "scripts": {
+          "lint": "tsdx lint src test",
+          "build": "tsdx build",
+          "start": "tsdx watch",
+          "test": "tsdx test",
+          "prepublishOnly": "tsdx build"
+      },
+      "dependencies": {
+          "@uniswap/v2-core": "^1.0.0",
+          "big.js": "^5.2.2",
+          "decimal.js-light": "^2.5.0",
+          "jsbi": "^3.1.4",
+          "tiny-invariant": "^1.1.0",
+          "tiny-warning": "^1.0.3",
+          "toformat": "^2.0.0"
+      },
+      "peerDependencies": {
+          "@ethersproject/address": "^5.0.0-beta",
+          "@ethersproject/contracts": "^5.0.0-beta",
+          "@ethersproject/networks": "^5.0.0-beta",
+          "@ethersproject/providers": "^5.0.0-beta",
+          "@ethersproject/solidity": "^5.0.0-beta"
+      },
+      "devDependencies": {
+          "@ethersproject/address": "^5.0.2",
+          "@ethersproject/contracts": "^5.0.2",
+          "@ethersproject/networks": "^5.0.2",
+          "@ethersproject/providers": "^5.0.5",
+          "@ethersproject/solidity": "^5.0.2",
+          "@types/big.js": "^4.0.5",
+          "@types/jest": "^24.0.25",
+          "babel-plugin-transform-jsbi-to-bigint": "^1.3.1",
+          "tsdx": "^0.14.1"
+      },
+      "engines": {
+          "node": ">=10"
+      },
+      "prettier": {
+          "printWidth": 120,
+          "semi": false,
+          "singleQuote": true
+      }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

@@ -1,7 +1,7 @@
 {
     "name": "@hashprotocol/bridgesdk",
     "license": "MIT",
-    "version": "1.0.0",
+    "version": "0.0.2",
     "description": "🏂 An SDK for building applications on top of Hashbridge.",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",
