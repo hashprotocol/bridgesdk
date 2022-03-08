@@ -495,6 +495,7 @@ Currency.MATIC = /*#__PURE__*/new Currency(18, 'MATIC', 'MATIC');
 Currency.HECO = /*#__PURE__*/new Currency(18, 'HT', 'HT');
 Currency.MOVR = /*#__PURE__*/new Currency(18, 'MOVR', 'MOVR');
 Currency.FTM = /*#__PURE__*/new Currency(18, 'FTM', 'FTM');
+Currency.ALGO = /*#__PURE__*/new Currency(18, 'ALGO', 'ALGO');
 Currency.SDN = /*#__PURE__*/new Currency(18, 'SDN', 'SDN');
 Currency.IOTX = /*#__PURE__*/new Currency(18, 'IOTX', 'IOTX');
 Currency.ONE = /*#__PURE__*/new Currency(18, 'ONE', 'ONE');
@@ -511,6 +512,7 @@ var MATIC = Currency.MATIC;
 var HECO = Currency.HECO;
 var MOVR = Currency.MOVR;
 var FTM = Currency.FTM;
+var ALGO = Currency.ALGO;
 var SDN = Currency.SDN;
 var IOTX = Currency.IOTX;
 var ONE$1 = Currency.ONE;
@@ -519,10 +521,10 @@ var OKT = Currency.OKT;
 var MTV = Currency.MTV;
 var METIS = Currency.METIS;
 var GLMR = Currency.GLMR;
-var ETHER_CURRENCIES = [ETHER, AVAX, BNB, DEV, MATIC, HECO, MOVR, FTM, SDN, IOTX, ONE$1, CRO, OKT, MTV, METIS, GLMR];
-var ETHER_NAMES_CURRENCIES = ['ETH', 'AVAX', 'BNB', 'DEV', 'MATIC', 'HT', 'MOVR', 'FTM', 'SDN', 'IOTX', 'ONE', 'CRO', 'OKT', 'MTV', 'METIS', 'GLMR'];
+var ETHER_CURRENCIES = [ETHER, AVAX, BNB, DEV, MATIC, HECO, MOVR, FTM, ALGO, SDN, IOTX, ONE$1, CRO, OKT, MTV, METIS, GLMR];
+var ETHER_NAMES_CURRENCIES = ['ETH', 'AVAX', 'BNB', 'DEV', 'MATIC', 'HT', 'MOVR', 'FTM', 'ALGO', 'SDN', 'IOTX', 'ONE', 'CRO', 'OKT', 'MTV', 'METIS', 'GLMR'];
 var CHAIN_IDS_AND_CURRENCIES = [[ChainId.MAINNET, ETHER], [ChainId.ROPSTEN, ETHER], [ChainId.RINKEBY, ETHER], [ChainId.GÖRLI, ETHER], [ChainId.KOVAN, ETHER], [ChainId.FUJI, AVAX], [ChainId.AVALANCHE, AVAX], [ChainId.SMART_CHAIN, BNB], [ChainId.SMART_CHAIN_TEST, BNB], [ChainId.MOONBASE_ALPHA, DEV], [ChainId.MOONRIVER, MOVR], [ChainId.MUMBAI, MATIC], [ChainId.MATIC, MATIC], [ChainId.HECO, HECO], [ChainId.FANTOM, FTM], [ChainId.FANTOM, ALGO], [ChainId.SHIDEN, SDN], [ChainId.SHIDEN, SDN], [ChainId.IOTEX, IOTX], [ChainId.HARMONY, ONE$1], [ChainId.CRONOS, CRO], [ChainId.OKEX, OKT], [ChainId.MULTIVAC, MTV], [ChainId.METIS_NETWORK, METIS], [ChainId.MOONBEAM, GLMR]];
-var NETWORK_LABELS = (_NETWORK_LABELS = {}, _NETWORK_LABELS[ChainId.RINKEBY] = 'Rinkeby', _NETWORK_LABELS[ChainId.ROPSTEN] = 'Ropsten', _NETWORK_LABELS[ChainId.GÖRLI] = 'Görli', _NETWORK_LABELS[ChainId.KOVAN] = 'Kovan', _NETWORK_LABELS[ChainId.FUJI] = 'Avalanche', _NETWORK_LABELS[ChainId.AVALANCHE] = 'Avalanche', _NETWORK_LABELS[ChainId.SMART_CHAIN] = 'SmartChain', _NETWORK_LABELS[ChainId.SMART_CHAIN_TEST] = 'SmartChainTestnet', _NETWORK_LABELS[ChainId.MOONBASE_ALPHA] = 'Moonbase', _NETWORK_LABELS[ChainId.MUMBAI] = 'Mumbai', _NETWORK_LABELS[ChainId.MAINNET] = 'Ethereum', _NETWORK_LABELS[ChainId.MATIC] = 'Polygon', _NETWORK_LABELS[ChainId.HECO] = 'HECO', _NETWORK_LABELS[ChainId.MOONRIVER] = 'Moonriver', _NETWORK_LABELS[ChainId.FANTOM] = 'Fantom', _NETWORK_LABELS[ChainId.SHIDEN] = 'Shiden', _NETWORK_LABELS[ChainId.IOTEX] = 'IoTeX', _NETWORK_LABELS[ChainId.HARMONY] = 'Harmony', _NETWORK_LABELS[ChainId.CRONOS] = 'Cronos', _NETWORK_LABELS[ChainId.OKEX] = 'OKEx', _NETWORK_LABELS[ChainId.MULTIVAC] = 'MultiVAC', _NETWORK_LABELS[ChainId.METIS_NETWORK] = 'MetisNetwork', _NETWORK_LABELS[ChainId.MOONBEAM] = 'Moonbeam', _NETWORK_LABELS);
+var NETWORK_LABELS = (_NETWORK_LABELS = {}, _NETWORK_LABELS[ChainId.RINKEBY] = 'Rinkeby', _NETWORK_LABELS[ChainId.ROPSTEN] = 'Ropsten', _NETWORK_LABELS[ChainId.GÖRLI] = 'Görli', _NETWORK_LABELS[ChainId.KOVAN] = 'Kovan', _NETWORK_LABELS[ChainId.FUJI] = 'Avalanche', _NETWORK_LABELS[ChainId.AVALANCHE] = 'Avalanche', _NETWORK_LABELS[ChainId.SMART_CHAIN] = 'SmartChain', _NETWORK_LABELS[ChainId.SMART_CHAIN_TEST] = 'SmartChainTestnet', _NETWORK_LABELS[ChainId.MOONBASE_ALPHA] = 'Moonbase', _NETWORK_LABELS[ChainId.MUMBAI] = 'Mumbai', _NETWORK_LABELS[ChainId.MAINNET] = 'Ethereum', _NETWORK_LABELS[ChainId.MATIC] = 'Polygon', _NETWORK_LABELS[ChainId.HECO] = 'HECO', _NETWORK_LABELS[ChainId.MOONRIVER] = 'Moonriver', _NETWORK_LABELS[ChainId.FANTOM] = 'Fantom', _NETWORK_LABELS[ChainId.ALGORAND] = 'Algorand', _NETWORK_LABELS[ChainId.SHIDEN] = 'Shiden', _NETWORK_LABELS[ChainId.IOTEX] = 'IoTeX', _NETWORK_LABELS[ChainId.HARMONY] = 'Harmony', _NETWORK_LABELS[ChainId.CRONOS] = 'Cronos', _NETWORK_LABELS[ChainId.OKEX] = 'OKEx', _NETWORK_LABELS[ChainId.MULTIVAC] = 'MultiVAC', _NETWORK_LABELS[ChainId.METIS_NETWORK] = 'MetisNetwork', _NETWORK_LABELS[ChainId.MOONBEAM] = 'Moonbeam', _NETWORK_LABELS);
 var NETWORK_SYMBOLS = {
   Ethereum: 'ETH',
   Rinkeby: 'ETH',
@@ -536,6 +538,7 @@ var NETWORK_SYMBOLS = {
   HECO: 'HT',
   Moonriver: 'MOVR',
   Fantom: 'FTM',
+  Fantom: 'ALGO',
   Shiden: 'SDN',
   Iotex: 'IOTX',
   Harmony: 'ONE',
