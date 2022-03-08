@@ -16,6 +16,7 @@ export declare enum ChainId {
     MATIC = 137,
     HECO = 128,
     FANTOM = 250,
+    ALGORAND = 300,
     SHIDEN = 336,
     IOTEX = 4689,
     HARMONY = 1666600000,
@@ -41,6 +42,7 @@ export declare const ETHERSCAN_PREFIXES: {
     128: string;
     1285: string;
     250: string;
+    300: string;
     336: string;
     4689: string;
     1666600000: string;

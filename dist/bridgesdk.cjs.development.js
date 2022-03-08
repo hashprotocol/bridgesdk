@@ -1,19 +1,23 @@
-import JSBI from 'jsbi';
-export { default as JSBI } from 'jsbi';
-import invariant from 'tiny-invariant';
-import warning from 'tiny-warning';
-import { getAddress, getCreate2Address } from '@ethersproject/address';
-import { keccak256, pack } from '@ethersproject/solidity';
-import _Decimal from 'decimal.js-light';
-import _Big from 'big.js';
-import toFormat from 'toformat';
-import { Contract } from '@ethersproject/contracts';
-import { getNetwork } from '@ethersproject/networks';
-import { getDefaultProvider } from '@ethersproject/providers';
-import IUniswapV2Pair from '@uniswap/v2-core/build/IUniswapV2Pair.json';
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
+var JSBI = _interopDefault(require('jsbi'));
+var invariant = _interopDefault(require('tiny-invariant'));
+var warning = _interopDefault(require('tiny-warning'));
+var address = require('@ethersproject/address');
+var solidity = require('@ethersproject/solidity');
+var _Decimal = _interopDefault(require('decimal.js-light'));
+var _Big = _interopDefault(require('big.js'));
+var toFormat = _interopDefault(require('toformat'));
+var contracts = require('@ethersproject/contracts');
+var networks = require('@ethersproject/networks');
+var providers = require('@ethersproject/providers');
+var IUniswapV2Pair = _interopDefault(require('@uniswap/v2-core/build/IUniswapV2Pair.json'));
 
 var _FACTORY_AND_INIT, _SOLIDITY_TYPE_MAXIMA;
-var ChainId;
 
 (function (ChainId) {
   ChainId[ChainId["MAINNET"] = 1] = "MAINNET";
@@ -31,6 +35,7 @@ var ChainId;
   ChainId[ChainId["MATIC"] = 137] = "MATIC";
   ChainId[ChainId["HECO"] = 128] = "HECO";
   ChainId[ChainId["FANTOM"] = 250] = "FANTOM";
+  ChainId[ChainId["ALGORAND"] = 250] = "ALGORAND";
   ChainId[ChainId["SHIDEN"] = 336] = "SHIDEN";
   ChainId[ChainId["IOTEX"] = 4689] = "IOTEX";
   ChainId[ChainId["HARMONY"] = 1666600000] = "HARMONY";
@@ -39,7 +44,7 @@ var ChainId;
   ChainId[ChainId["MULTIVAC"] = 62621] = "MULTIVAC";
   ChainId[ChainId["METIS_NETWORK"] = 1088] = "METIS_NETWORK";
   ChainId[ChainId["MOONBEAM"] = 1284] = "MOONBEAM";
-})(ChainId || (ChainId = {}));
+})(exports.ChainId || (exports.ChainId = {}));
 
 var ETHERSCAN_PREFIXES = {
   1: '',
@@ -57,6 +62,7 @@ var ETHERSCAN_PREFIXES = {
   128: 'HECO',
   1285: 'MOONRIVER',
   250: 'FANTOM',
+  300: 'ALGORAND',
   336: 'SHIDEN',
   4689: 'IOTEX',
   1666600000: 'HARMONY',
@@ -66,53 +72,50 @@ var ETHERSCAN_PREFIXES = {
   1088: 'METIS_NETWORK',
   1284: 'MOONBEAM'
 };
-var TradeType;
 
 (function (TradeType) {
   TradeType[TradeType["EXACT_INPUT"] = 0] = "EXACT_INPUT";
   TradeType[TradeType["EXACT_OUTPUT"] = 1] = "EXACT_OUTPUT";
-})(TradeType || (TradeType = {}));
-
-var Rounding;
+})(exports.TradeType || (exports.TradeType = {}));
 
 (function (Rounding) {
   Rounding[Rounding["ROUND_DOWN"] = 0] = "ROUND_DOWN";
   Rounding[Rounding["ROUND_HALF_UP"] = 1] = "ROUND_HALF_UP";
   Rounding[Rounding["ROUND_UP"] = 2] = "ROUND_UP";
-})(Rounding || (Rounding = {}));
+})(exports.Rounding || (exports.Rounding = {}));
 
 var FACTORY_ADDRESS = '0x2Ef422F30cdb7c5F1f7267AB5CF567A88974b308';
 var INIT_CODE_HASH = '0x4b5b254233f8aba1e01c0538653d54036e3c9f7873daf99623bb358f1cf33188'; // export const FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
 // export const INIT_CODE_HASH = '0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f'
 
-var FACTORY_AND_INIT = (_FACTORY_AND_INIT = {}, _FACTORY_AND_INIT[ChainId.MAINNET] = {
+var FACTORY_AND_INIT = (_FACTORY_AND_INIT = {}, _FACTORY_AND_INIT[exports.ChainId.MAINNET] = {
   factoryAddress: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
   initCodeHash: '0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f'
-}, _FACTORY_AND_INIT[ChainId.RINKEBY] = {
+}, _FACTORY_AND_INIT[exports.ChainId.RINKEBY] = {
   factoryAddress: '0x875D0F2ad61803927c087ac2ef82539706f5364C',
   initCodeHash: '0x4b5b254233f8aba1e01c0538653d54036e3c9f7873daf99623bb358f1cf33188'
-}, _FACTORY_AND_INIT[ChainId.AVALANCHE] = {
+}, _FACTORY_AND_INIT[exports.ChainId.AVALANCHE] = {
   factoryAddress: '0x2Ef422F30cdb7c5F1f7267AB5CF567A88974b308',
   initCodeHash: '0x4b5b254233f8aba1e01c0538653d54036e3c9f7873daf99623bb358f1cf33188'
-}, _FACTORY_AND_INIT[ChainId.FUJI] = {
+}, _FACTORY_AND_INIT[exports.ChainId.FUJI] = {
   factoryAddress: '0xeEdaAB3cdb85B77430f2272f6cDbaE2020F48c80',
   initCodeHash: '0x4b5b254233f8aba1e01c0538653d54036e3c9f7873daf99623bb358f1cf33188'
-}, _FACTORY_AND_INIT[ChainId.SMART_CHAIN] = {
+}, _FACTORY_AND_INIT[exports.ChainId.SMART_CHAIN] = {
   factoryAddress: '0x52AbdB3536a3a966056e096F2572B2755df26eac',
   initCodeHash: '0x4b5b254233f8aba1e01c0538653d54036e3c9f7873daf99623bb358f1cf33188'
-}, _FACTORY_AND_INIT[ChainId.SMART_CHAIN_TEST] = {
+}, _FACTORY_AND_INIT[exports.ChainId.SMART_CHAIN_TEST] = {
   factoryAddress: '0x2583e5E9c4E0CA0C4F4DfFA5eacC1ce1fC0e277c',
   initCodeHash: '0x4b5b254233f8aba1e01c0538653d54036e3c9f7873daf99623bb358f1cf33188'
-}, _FACTORY_AND_INIT[ChainId.MOONBASE_ALPHA] = {
+}, _FACTORY_AND_INIT[exports.ChainId.MOONBASE_ALPHA] = {
   factoryAddress: '0x2583e5E9c4E0CA0C4F4DfFA5eacC1ce1fC0e277c',
   initCodeHash: '0x4b5b254233f8aba1e01c0538653d54036e3c9f7873daf99623bb358f1cf33188'
-}, _FACTORY_AND_INIT[ChainId.MUMBAI] = {
+}, _FACTORY_AND_INIT[exports.ChainId.MUMBAI] = {
   factoryAddress: '0xeEdaAB3cdb85B77430f2272f6cDbaE2020F48c80',
   initCodeHash: '0x4b5b254233f8aba1e01c0538653d54036e3c9f7873daf99623bb358f1cf33188'
-}, _FACTORY_AND_INIT[ChainId.MATIC] = {
+}, _FACTORY_AND_INIT[exports.ChainId.MATIC] = {
   factoryAddress: '0x6FD98Cf211134081fe02F551D64Cf89671D5443b',
   initCodeHash: '0x4b5b254233f8aba1e01c0538653d54036e3c9f7873daf99623bb358f1cf33188'
-}, _FACTORY_AND_INIT[ChainId.HECO] = {
+}, _FACTORY_AND_INIT[exports.ChainId.HECO] = {
   factoryAddress: '0xf54e0e467f9644b73819637b30de52b5a1d511e6',
   initCodeHash: '0x4b5b254233f8aba1e01c0538653d54036e3c9f7873daf99623bb358f1cf33188'
 }, _FACTORY_AND_INIT);
@@ -185,6 +188,9 @@ function _defineProperties(target, props) {
 function _createClass(Constructor, protoProps, staticProps) {
   if (protoProps) _defineProperties(Constructor.prototype, protoProps);
   if (staticProps) _defineProperties(Constructor, staticProps);
+  Object.defineProperty(Constructor, "prototype", {
+    writable: false
+  });
   return Constructor;
 }
 
@@ -209,7 +215,8 @@ function _extends() {
 function _inheritsLoose(subClass, superClass) {
   subClass.prototype = Object.create(superClass.prototype);
   subClass.prototype.constructor = subClass;
-  subClass.__proto__ = superClass;
+
+  _setPrototypeOf(subClass, superClass);
 }
 
 function _getPrototypeOf(o) {
@@ -234,7 +241,7 @@ function _isNativeReflectConstruct() {
   if (typeof Proxy === "function") return true;
 
   try {
-    Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+    Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
     return true;
   } catch (e) {
     return false;
@@ -322,28 +329,24 @@ function _arrayLikeToArray(arr, len) {
 }
 
 function _createForOfIteratorHelperLoose(o, allowArrayLike) {
-  var it;
+  var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];
+  if (it) return (it = it.call(o)).next.bind(it);
 
-  if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) {
-    if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
-      if (it) o = it;
-      var i = 0;
-      return function () {
-        if (i >= o.length) return {
-          done: true
-        };
-        return {
-          done: false,
-          value: o[i++]
-        };
+  if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
+    if (it) o = it;
+    var i = 0;
+    return function () {
+      if (i >= o.length) return {
+        done: true
       };
-    }
-
-    throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+      return {
+        done: false,
+        value: o[i++]
+      };
+    };
   }
 
-  it = o[Symbol.iterator]();
-  return it.next.bind(it);
+  throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
 
 // see https://stackoverflow.com/a/41102306
@@ -390,17 +393,17 @@ var InsufficientInputAmountError = /*#__PURE__*/function (_Error2) {
 }( /*#__PURE__*/_wrapNativeSuper(Error));
 
 function validateSolidityTypeInstance(value, solidityType) {
-  !JSBI.greaterThanOrEqual(value, ZERO) ? process.env.NODE_ENV !== "production" ? invariant(false, value + " is not a " + solidityType + ".") : invariant(false) : void 0;
-  !JSBI.lessThanOrEqual(value, SOLIDITY_TYPE_MAXIMA[solidityType]) ? process.env.NODE_ENV !== "production" ? invariant(false, value + " is not a " + solidityType + ".") : invariant(false) : void 0;
+  !JSBI.greaterThanOrEqual(value, ZERO) ?  invariant(false, value + " is not a " + solidityType + ".")  : void 0;
+  !JSBI.lessThanOrEqual(value, SOLIDITY_TYPE_MAXIMA[solidityType]) ?  invariant(false, value + " is not a " + solidityType + ".")  : void 0;
 } // warns if addresses are not checksummed
 
-function validateAndParseAddress(address) {
+function validateAndParseAddress(address$1) {
   try {
-    var checksummedAddress = getAddress(address);
-    process.env.NODE_ENV !== "production" ? warning(address === checksummedAddress, address + " is not checksummed.") : void 0;
+    var checksummedAddress = address.getAddress(address$1);
+    "development" !== "production" ? warning(address$1 === checksummedAddress, address$1 + " is not checksummed.") : void 0;
     return checksummedAddress;
   } catch (error) {
-     process.env.NODE_ENV !== "production" ? invariant(false, address + " is not a valid address.") : invariant(false) ;
+      invariant(false, address$1 + " is not a valid address.")  ;
   }
 }
 function parseBigintIsh(bigintIsh) {
@@ -429,9 +432,9 @@ function sqrt(y) {
 // `maxSize` by removing the last item
 
 function sortedInsert(items, add, maxSize, comparator) {
-  !(maxSize > 0) ? process.env.NODE_ENV !== "production" ? invariant(false, 'MAX_SIZE_ZERO') : invariant(false) : void 0; // this is an invariant because the interface cannot return multiple removed items if items.length exceeds maxSize
+  !(maxSize > 0) ?  invariant(false, 'MAX_SIZE_ZERO')  : void 0; // this is an invariant because the interface cannot return multiple removed items if items.length exceeds maxSize
 
-  !(items.length <= maxSize) ? process.env.NODE_ENV !== "production" ? invariant(false, 'ITEMS_SIZE') : invariant(false) : void 0; // short circuit first item add
+  !(items.length <= maxSize) ?  invariant(false, 'ITEMS_SIZE')  : void 0; // short circuit first item add
 
   if (items.length === 0) {
     items.push(add);
@@ -519,8 +522,8 @@ var METIS = Currency.METIS;
 var GLMR = Currency.GLMR;
 var ETHER_CURRENCIES = [ETHER, AVAX, BNB, DEV, MATIC, HECO, MOVR, FTM, SDN, IOTX, ONE$1, CRO, OKT, MTV, METIS, GLMR];
 var ETHER_NAMES_CURRENCIES = ['ETH', 'AVAX', 'BNB', 'DEV', 'MATIC', 'HT', 'MOVR', 'FTM', 'SDN', 'IOTX', 'ONE', 'CRO', 'OKT', 'MTV', 'METIS', 'GLMR'];
-var CHAIN_IDS_AND_CURRENCIES = [[ChainId.MAINNET, ETHER], [ChainId.ROPSTEN, ETHER], [ChainId.RINKEBY, ETHER], [ChainId.GÖRLI, ETHER], [ChainId.KOVAN, ETHER], [ChainId.FUJI, AVAX], [ChainId.AVALANCHE, AVAX], [ChainId.SMART_CHAIN, BNB], [ChainId.SMART_CHAIN_TEST, BNB], [ChainId.MOONBASE_ALPHA, DEV], [ChainId.MOONRIVER, MOVR], [ChainId.MUMBAI, MATIC], [ChainId.MATIC, MATIC], [ChainId.HECO, HECO], [ChainId.FANTOM, FTM], [ChainId.SHIDEN, SDN], [ChainId.SHIDEN, SDN], [ChainId.IOTEX, IOTX], [ChainId.HARMONY, ONE$1], [ChainId.CRONOS, CRO], [ChainId.OKEX, OKT], [ChainId.MULTIVAC, MTV], [ChainId.METIS_NETWORK, METIS], [ChainId.MOONBEAM, GLMR]];
-var NETWORK_LABELS = (_NETWORK_LABELS = {}, _NETWORK_LABELS[ChainId.RINKEBY] = 'Rinkeby', _NETWORK_LABELS[ChainId.ROPSTEN] = 'Ropsten', _NETWORK_LABELS[ChainId.GÖRLI] = 'Görli', _NETWORK_LABELS[ChainId.KOVAN] = 'Kovan', _NETWORK_LABELS[ChainId.FUJI] = 'Avalanche', _NETWORK_LABELS[ChainId.AVALANCHE] = 'Avalanche', _NETWORK_LABELS[ChainId.SMART_CHAIN] = 'SmartChain', _NETWORK_LABELS[ChainId.SMART_CHAIN_TEST] = 'SmartChainTestnet', _NETWORK_LABELS[ChainId.MOONBASE_ALPHA] = 'Moonbase', _NETWORK_LABELS[ChainId.MUMBAI] = 'Mumbai', _NETWORK_LABELS[ChainId.MAINNET] = 'Ethereum', _NETWORK_LABELS[ChainId.MATIC] = 'Polygon', _NETWORK_LABELS[ChainId.HECO] = 'HECO', _NETWORK_LABELS[ChainId.MOONRIVER] = 'Moonriver', _NETWORK_LABELS[ChainId.FANTOM] = 'Fantom', _NETWORK_LABELS[ChainId.SHIDEN] = 'Shiden', _NETWORK_LABELS[ChainId.IOTEX] = 'IoTeX', _NETWORK_LABELS[ChainId.HARMONY] = 'Harmony', _NETWORK_LABELS[ChainId.CRONOS] = 'Cronos', _NETWORK_LABELS[ChainId.OKEX] = 'OKEx', _NETWORK_LABELS[ChainId.MULTIVAC] = 'MultiVAC', _NETWORK_LABELS[ChainId.METIS_NETWORK] = 'MetisNetwork', _NETWORK_LABELS[ChainId.MOONBEAM] = 'Moonbeam', _NETWORK_LABELS);
+var CHAIN_IDS_AND_CURRENCIES = [[exports.ChainId.MAINNET, ETHER], [exports.ChainId.ROPSTEN, ETHER], [exports.ChainId.RINKEBY, ETHER], [exports.ChainId.GÖRLI, ETHER], [exports.ChainId.KOVAN, ETHER], [exports.ChainId.FUJI, AVAX], [exports.ChainId.AVALANCHE, AVAX], [exports.ChainId.SMART_CHAIN, BNB], [exports.ChainId.SMART_CHAIN_TEST, BNB], [exports.ChainId.MOONBASE_ALPHA, DEV], [exports.ChainId.MOONRIVER, MOVR], [exports.ChainId.MUMBAI, MATIC], [exports.ChainId.MATIC, MATIC], [exports.ChainId.HECO, HECO], [exports.ChainId.FANTOM, FTM], [exports.ChainId.FANTOM, FTM], [exports.ChainId.SHIDEN, SDN], [exports.ChainId.SHIDEN, SDN], [exports.ChainId.IOTEX, IOTX], [exports.ChainId.HARMONY, ONE$1], [exports.ChainId.CRONOS, CRO], [exports.ChainId.OKEX, OKT], [exports.ChainId.MULTIVAC, MTV], [exports.ChainId.METIS_NETWORK, METIS], [exports.ChainId.MOONBEAM, GLMR]];
+var NETWORK_LABELS = (_NETWORK_LABELS = {}, _NETWORK_LABELS[exports.ChainId.RINKEBY] = 'Rinkeby', _NETWORK_LABELS[exports.ChainId.ROPSTEN] = 'Ropsten', _NETWORK_LABELS[exports.ChainId.GÖRLI] = 'Görli', _NETWORK_LABELS[exports.ChainId.KOVAN] = 'Kovan', _NETWORK_LABELS[exports.ChainId.FUJI] = 'Avalanche', _NETWORK_LABELS[exports.ChainId.AVALANCHE] = 'Avalanche', _NETWORK_LABELS[exports.ChainId.SMART_CHAIN] = 'SmartChain', _NETWORK_LABELS[exports.ChainId.SMART_CHAIN_TEST] = 'SmartChainTestnet', _NETWORK_LABELS[exports.ChainId.MOONBASE_ALPHA] = 'Moonbase', _NETWORK_LABELS[exports.ChainId.MUMBAI] = 'Mumbai', _NETWORK_LABELS[exports.ChainId.MAINNET] = 'Ethereum', _NETWORK_LABELS[exports.ChainId.MATIC] = 'Polygon', _NETWORK_LABELS[exports.ChainId.HECO] = 'HECO', _NETWORK_LABELS[exports.ChainId.MOONRIVER] = 'Moonriver', _NETWORK_LABELS[exports.ChainId.FANTOM] = 'Fantom', _NETWORK_LABELS[exports.ChainId.SHIDEN] = 'Shiden', _NETWORK_LABELS[exports.ChainId.IOTEX] = 'IoTeX', _NETWORK_LABELS[exports.ChainId.HARMONY] = 'Harmony', _NETWORK_LABELS[exports.ChainId.CRONOS] = 'Cronos', _NETWORK_LABELS[exports.ChainId.OKEX] = 'OKEx', _NETWORK_LABELS[exports.ChainId.MULTIVAC] = 'MultiVAC', _NETWORK_LABELS[exports.ChainId.METIS_NETWORK] = 'MetisNetwork', _NETWORK_LABELS[exports.ChainId.MOONBEAM] = 'Moonbeam', _NETWORK_LABELS);
 var NETWORK_SYMBOLS = {
   Ethereum: 'ETH',
   Rinkeby: 'ETH',
@@ -600,8 +603,8 @@ var Token = /*#__PURE__*/function (_Currency) {
   ;
 
   _proto.sortsBefore = function sortsBefore(other) {
-    !(this.chainId === other.chainId) ? process.env.NODE_ENV !== "production" ? invariant(false, 'CHAIN_IDS') : invariant(false) : void 0;
-    !(this.address !== other.address) ? process.env.NODE_ENV !== "production" ? invariant(false, 'ADDRESSES') : invariant(false) : void 0;
+    !(this.chainId === other.chainId) ?  invariant(false, 'CHAIN_IDS')  : void 0;
+    !(this.address !== other.address) ?  invariant(false, 'ADDRESSES')  : void 0;
     return this.address.toLowerCase() < other.address.toLowerCase();
   };
 
@@ -622,13 +625,13 @@ function currencyEquals(currencyA, currencyB) {
     return currencyA === currencyB;
   }
 }
-var WETH = (_WETH = {}, _WETH[ChainId.MAINNET] = /*#__PURE__*/new Token(ChainId.MAINNET, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.ROPSTEN] = /*#__PURE__*/new Token(ChainId.ROPSTEN, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.RINKEBY] = /*#__PURE__*/new Token(ChainId.RINKEBY, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.GÖRLI] = /*#__PURE__*/new Token(ChainId.GÖRLI, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.KOVAN] = /*#__PURE__*/new Token(ChainId.KOVAN, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'), _WETH[ChainId.FUJI] = /*#__PURE__*/new Token(ChainId.FUJI, '0x4e7a7ffc71Fb28b037f39b5f5cB8aF0bf5cF3B5C', 18, 'WAVAX', 'Wrapped AVAX'), _WETH[ChainId.AVALANCHE] = /*#__PURE__*/new Token(ChainId.AVALANCHE, '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7', 18, 'WAVAX', 'Wrapped AVAX'), _WETH[ChainId.SMART_CHAIN] = /*#__PURE__*/new Token(ChainId.SMART_CHAIN, '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', 18, 'WBNB', 'Wrapped BNB'), _WETH[ChainId.SMART_CHAIN_TEST] = /*#__PURE__*/new Token(ChainId.SMART_CHAIN_TEST, '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd', 18, 'WBNB', 'Wrapped BNB'), _WETH[ChainId.MOONBASE_ALPHA] = /*#__PURE__*/new Token(ChainId.MOONBASE_ALPHA, '0x15623F3b7219FB862dE760c212fFcD13d201c6c6', 18, 'WDEV', 'Wrapped DEV'), _WETH[ChainId.MOONRIVER] = /*#__PURE__*/new Token(ChainId.MOONRIVER, '0x98878B06940aE243284CA214f92Bb71a2b032B8A', 18, 'WMOVR', 'Wrapped MOVR'), _WETH[ChainId.MUMBAI] = /*#__PURE__*/new Token(ChainId.MUMBAI, '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889', 18, 'WMATIC', 'Wrapped MATIC'), _WETH[ChainId.MATIC] = /*#__PURE__*/new Token(ChainId.MATIC, '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', 18, 'WMATIC', 'Wrapped MATIC in Mainnet'), _WETH[ChainId.HECO] = /*#__PURE__*/new Token(ChainId.HECO, '0x5545153CCFcA01fbd7Dd11C0b23ba694D9509A6F', 18, 'WHT', 'Wrapped HECO in Mainnet'), _WETH[ChainId.FANTOM] = /*#__PURE__*/new Token(ChainId.FANTOM, '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', 18, 'WFTM', ' Wrapped Fantom in Mainnet'), _WETH[ChainId.SHIDEN] = /*#__PURE__*/new Token(ChainId.SHIDEN, '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', 18, 'WSDN', ' Wrapped Shiden in Mainnet'), _WETH[ChainId.IOTEX] = /*#__PURE__*/new Token(ChainId.IOTEX, '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', 18, 'WIOTX', ' Wrapped Iotex in Mainnet'), _WETH[ChainId.HARMONY] = /*#__PURE__*/new Token(ChainId.HARMONY, '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', 18, 'WONE', ' Wrapped Harmony in Mainnet'), _WETH[ChainId.CRONOS] = /*#__PURE__*/new Token(ChainId.CRONOS, '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', 18, 'WCRO', ' Wrapped Cronos in Mainnet'), _WETH[ChainId.OKEX] = /*#__PURE__*/new Token(ChainId.OKEX, '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', 18, 'WOKT', ' Wrapped Okex in Mainnet'), _WETH[ChainId.MULTIVAC] = /*#__PURE__*/new Token(ChainId.MULTIVAC, '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', 18, 'WMTV', ' Wrapped MTV in Mainnet'), _WETH[ChainId.METIS_NETWORK] = /*#__PURE__*/new Token(ChainId.METIS_NETWORK, '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', 18, 'WMETIS', ' Wrapped METIS in Mainnet'), _WETH[ChainId.MOONBEAM] = /*#__PURE__*/new Token(ChainId.MOONBEAM, '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', 18, 'WGLMR', ' Wrapped GLMR in Mainnet'), _WETH);
+var WETH = (_WETH = {}, _WETH[exports.ChainId.MAINNET] = /*#__PURE__*/new Token(exports.ChainId.MAINNET, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.ROPSTEN] = /*#__PURE__*/new Token(exports.ChainId.ROPSTEN, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.RINKEBY] = /*#__PURE__*/new Token(exports.ChainId.RINKEBY, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.GÖRLI] = /*#__PURE__*/new Token(exports.ChainId.GÖRLI, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.KOVAN] = /*#__PURE__*/new Token(exports.ChainId.KOVAN, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'), _WETH[exports.ChainId.FUJI] = /*#__PURE__*/new Token(exports.ChainId.FUJI, '0x4e7a7ffc71Fb28b037f39b5f5cB8aF0bf5cF3B5C', 18, 'WAVAX', 'Wrapped AVAX'), _WETH[exports.ChainId.AVALANCHE] = /*#__PURE__*/new Token(exports.ChainId.AVALANCHE, '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7', 18, 'WAVAX', 'Wrapped AVAX'), _WETH[exports.ChainId.SMART_CHAIN] = /*#__PURE__*/new Token(exports.ChainId.SMART_CHAIN, '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', 18, 'WBNB', 'Wrapped BNB'), _WETH[exports.ChainId.SMART_CHAIN_TEST] = /*#__PURE__*/new Token(exports.ChainId.SMART_CHAIN_TEST, '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd', 18, 'WBNB', 'Wrapped BNB'), _WETH[exports.ChainId.MOONBASE_ALPHA] = /*#__PURE__*/new Token(exports.ChainId.MOONBASE_ALPHA, '0x15623F3b7219FB862dE760c212fFcD13d201c6c6', 18, 'WDEV', 'Wrapped DEV'), _WETH[exports.ChainId.MOONRIVER] = /*#__PURE__*/new Token(exports.ChainId.MOONRIVER, '0x98878B06940aE243284CA214f92Bb71a2b032B8A', 18, 'WMOVR', 'Wrapped MOVR'), _WETH[exports.ChainId.MUMBAI] = /*#__PURE__*/new Token(exports.ChainId.MUMBAI, '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889', 18, 'WMATIC', 'Wrapped MATIC'), _WETH[exports.ChainId.MATIC] = /*#__PURE__*/new Token(exports.ChainId.MATIC, '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', 18, 'WMATIC', 'Wrapped MATIC in Mainnet'), _WETH[exports.ChainId.HECO] = /*#__PURE__*/new Token(exports.ChainId.HECO, '0x5545153CCFcA01fbd7Dd11C0b23ba694D9509A6F', 18, 'WHT', 'Wrapped HECO in Mainnet'), _WETH[exports.ChainId.FANTOM] = /*#__PURE__*/new Token(exports.ChainId.FANTOM, '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', 18, 'WFTM', ' Wrapped Fantom in Mainnet'), _WETH[exports.ChainId.SHIDEN] = /*#__PURE__*/new Token(exports.ChainId.SHIDEN, '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', 18, 'WSDN', ' Wrapped Shiden in Mainnet'), _WETH[exports.ChainId.IOTEX] = /*#__PURE__*/new Token(exports.ChainId.IOTEX, '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', 18, 'WIOTX', ' Wrapped Iotex in Mainnet'), _WETH[exports.ChainId.HARMONY] = /*#__PURE__*/new Token(exports.ChainId.HARMONY, '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', 18, 'WONE', ' Wrapped Harmony in Mainnet'), _WETH[exports.ChainId.CRONOS] = /*#__PURE__*/new Token(exports.ChainId.CRONOS, '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', 18, 'WCRO', ' Wrapped Cronos in Mainnet'), _WETH[exports.ChainId.OKEX] = /*#__PURE__*/new Token(exports.ChainId.OKEX, '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', 18, 'WOKT', ' Wrapped Okex in Mainnet'), _WETH[exports.ChainId.MULTIVAC] = /*#__PURE__*/new Token(exports.ChainId.MULTIVAC, '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', 18, 'WMTV', ' Wrapped MTV in Mainnet'), _WETH[exports.ChainId.METIS_NETWORK] = /*#__PURE__*/new Token(exports.ChainId.METIS_NETWORK, '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', 18, 'WMETIS', ' Wrapped METIS in Mainnet'), _WETH[exports.ChainId.MOONBEAM] = /*#__PURE__*/new Token(exports.ChainId.MOONBEAM, '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83', 18, 'WGLMR', ' Wrapped GLMR in Mainnet'), _WETH);
 
 var _toSignificantRoundin, _toFixedRounding;
 var Decimal = /*#__PURE__*/toFormat(_Decimal);
 var Big = /*#__PURE__*/toFormat(_Big);
-var toSignificantRounding = (_toSignificantRoundin = {}, _toSignificantRoundin[Rounding.ROUND_DOWN] = Decimal.ROUND_DOWN, _toSignificantRoundin[Rounding.ROUND_HALF_UP] = Decimal.ROUND_HALF_UP, _toSignificantRoundin[Rounding.ROUND_UP] = Decimal.ROUND_UP, _toSignificantRoundin);
-var toFixedRounding = (_toFixedRounding = {}, _toFixedRounding[Rounding.ROUND_DOWN] = 0, _toFixedRounding[Rounding.ROUND_HALF_UP] = 1, _toFixedRounding[Rounding.ROUND_UP] = 3, _toFixedRounding);
+var toSignificantRounding = (_toSignificantRoundin = {}, _toSignificantRoundin[exports.Rounding.ROUND_DOWN] = Decimal.ROUND_DOWN, _toSignificantRoundin[exports.Rounding.ROUND_HALF_UP] = Decimal.ROUND_HALF_UP, _toSignificantRoundin[exports.Rounding.ROUND_UP] = Decimal.ROUND_UP, _toSignificantRoundin);
+var toFixedRounding = (_toFixedRounding = {}, _toFixedRounding[exports.Rounding.ROUND_DOWN] = 0, _toFixedRounding[exports.Rounding.ROUND_HALF_UP] = 1, _toFixedRounding[exports.Rounding.ROUND_UP] = 3, _toFixedRounding);
 var Fraction = /*#__PURE__*/function () {
   function Fraction(numerator, denominator) {
     if (denominator === void 0) {
@@ -699,11 +702,11 @@ var Fraction = /*#__PURE__*/function () {
     }
 
     if (rounding === void 0) {
-      rounding = Rounding.ROUND_HALF_UP;
+      rounding = exports.Rounding.ROUND_HALF_UP;
     }
 
-    !Number.isInteger(significantDigits) ? process.env.NODE_ENV !== "production" ? invariant(false, significantDigits + " is not an integer.") : invariant(false) : void 0;
-    !(significantDigits > 0) ? process.env.NODE_ENV !== "production" ? invariant(false, significantDigits + " is not positive.") : invariant(false) : void 0;
+    !Number.isInteger(significantDigits) ?  invariant(false, significantDigits + " is not an integer.")  : void 0;
+    !(significantDigits > 0) ?  invariant(false, significantDigits + " is not positive.")  : void 0;
     Decimal.set({
       precision: significantDigits + 1,
       rounding: toSignificantRounding[rounding]
@@ -720,11 +723,11 @@ var Fraction = /*#__PURE__*/function () {
     }
 
     if (rounding === void 0) {
-      rounding = Rounding.ROUND_HALF_UP;
+      rounding = exports.Rounding.ROUND_HALF_UP;
     }
 
-    !Number.isInteger(decimalPlaces) ? process.env.NODE_ENV !== "production" ? invariant(false, decimalPlaces + " is not an integer.") : invariant(false) : void 0;
-    !(decimalPlaces >= 0) ? process.env.NODE_ENV !== "production" ? invariant(false, decimalPlaces + " is negative.") : invariant(false) : void 0;
+    !Number.isInteger(decimalPlaces) ?  invariant(false, decimalPlaces + " is not an integer.")  : void 0;
+    !(decimalPlaces >= 0) ?  invariant(false, decimalPlaces + " is negative.")  : void 0;
     Big.DP = decimalPlaces;
     Big.RM = toFixedRounding[rounding];
     return new Big(this.numerator.toString()).div(this.denominator.toString()).toFormat(decimalPlaces, format);
@@ -769,67 +772,67 @@ var CurrencyAmount = /*#__PURE__*/function (_Fraction) {
   CurrencyAmount.ether = function ether(amount, chainId) {
     var currency = ETHER;
 
-    if (chainId && chainId === ChainId.AVALANCHE || chainId === ChainId.FUJI) {
+    if (chainId && chainId === exports.ChainId.AVALANCHE || chainId === exports.ChainId.FUJI) {
       currency = AVAX;
     }
 
-    if (chainId && chainId === ChainId.SMART_CHAIN || chainId === ChainId.SMART_CHAIN_TEST) {
+    if (chainId && chainId === exports.ChainId.SMART_CHAIN || chainId === exports.ChainId.SMART_CHAIN_TEST) {
       currency = BNB;
     }
 
-    if (chainId && chainId === ChainId.MOONBASE_ALPHA) {
+    if (chainId && chainId === exports.ChainId.MOONBASE_ALPHA) {
       currency = DEV;
     }
 
-    if (chainId && chainId === ChainId.MUMBAI) {
+    if (chainId && chainId === exports.ChainId.MUMBAI) {
       currency = MATIC;
     }
 
-    if (chainId && chainId === ChainId.MATIC) {
+    if (chainId && chainId === exports.ChainId.MATIC) {
       currency = MATIC;
     }
 
-    if (chainId && chainId === ChainId.HECO) {
+    if (chainId && chainId === exports.ChainId.HECO) {
       currency = HECO;
     }
 
-    if (chainId && chainId === ChainId.MOONRIVER) {
+    if (chainId && chainId === exports.ChainId.MOONRIVER) {
       currency = MOVR;
     }
 
-    if (chainId && chainId === ChainId.FANTOM) {
+    if (chainId && chainId === exports.ChainId.FANTOM) {
       currency = FTM;
     }
 
-    if (chainId && chainId === ChainId.SHIDEN) {
+    if (chainId && chainId === exports.ChainId.SHIDEN) {
       currency = SDN;
     }
 
-    if (chainId && chainId === ChainId.IOTEX) {
+    if (chainId && chainId === exports.ChainId.IOTEX) {
       currency = IOTX;
     }
 
-    if (chainId && chainId === ChainId.HARMONY) {
+    if (chainId && chainId === exports.ChainId.HARMONY) {
       currency = ONE$1;
     }
 
-    if (chainId && chainId === ChainId.CRONOS) {
+    if (chainId && chainId === exports.ChainId.CRONOS) {
       currency = CRO;
     }
 
-    if (chainId && chainId === ChainId.OKEX) {
+    if (chainId && chainId === exports.ChainId.OKEX) {
       currency = OKT;
     }
 
-    if (chainId && chainId === ChainId.MULTIVAC) {
+    if (chainId && chainId === exports.ChainId.MULTIVAC) {
       currency = MTV;
     }
 
-    if (chainId && chainId === ChainId.METIS_NETWORK) {
+    if (chainId && chainId === exports.ChainId.METIS_NETWORK) {
       currency = METIS;
     }
 
-    if (chainId && chainId === ChainId.MOONBEAM) {
+    if (chainId && chainId === exports.ChainId.MOONBEAM) {
       currency = GLMR;
     }
 
@@ -839,12 +842,12 @@ var CurrencyAmount = /*#__PURE__*/function (_Fraction) {
   var _proto = CurrencyAmount.prototype;
 
   _proto.add = function add(other) {
-    !currencyEquals(this.currency, other.currency) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
+    !currencyEquals(this.currency, other.currency) ?  invariant(false, 'TOKEN')  : void 0;
     return new CurrencyAmount(this.currency, JSBI.add(this.raw, other.raw));
   };
 
   _proto.subtract = function subtract(other) {
-    !currencyEquals(this.currency, other.currency) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
+    !currencyEquals(this.currency, other.currency) ?  invariant(false, 'TOKEN')  : void 0;
     return new CurrencyAmount(this.currency, JSBI.subtract(this.raw, other.raw));
   };
 
@@ -854,7 +857,7 @@ var CurrencyAmount = /*#__PURE__*/function (_Fraction) {
     }
 
     if (rounding === void 0) {
-      rounding = Rounding.ROUND_DOWN;
+      rounding = exports.Rounding.ROUND_DOWN;
     }
 
     return _Fraction.prototype.toSignificant.call(this, significantDigits, format, rounding);
@@ -866,10 +869,10 @@ var CurrencyAmount = /*#__PURE__*/function (_Fraction) {
     }
 
     if (rounding === void 0) {
-      rounding = Rounding.ROUND_DOWN;
+      rounding = exports.Rounding.ROUND_DOWN;
     }
 
-    !(decimalPlaces <= this.currency.decimals) ? process.env.NODE_ENV !== "production" ? invariant(false, 'DECIMALS') : invariant(false) : void 0;
+    !(decimalPlaces <= this.currency.decimals) ?  invariant(false, 'DECIMALS')  : void 0;
     return _Fraction.prototype.toFixed.call(this, decimalPlaces, format, rounding);
   };
 
@@ -909,12 +912,12 @@ var TokenAmount = /*#__PURE__*/function (_CurrencyAmount) {
   var _proto = TokenAmount.prototype;
 
   _proto.add = function add(other) {
-    !this.token.equals(other.token) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
+    !this.token.equals(other.token) ?  invariant(false, 'TOKEN')  : void 0;
     return new TokenAmount(this.token, JSBI.add(this.raw, other.raw));
   };
 
   _proto.subtract = function subtract(other) {
-    !this.token.equals(other.token) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
+    !this.token.equals(other.token) ?  invariant(false, 'TOKEN')  : void 0;
     return new TokenAmount(this.token, JSBI.subtract(this.raw, other.raw));
   };
 
@@ -957,7 +960,7 @@ var Price = /*#__PURE__*/function (_Fraction) {
   };
 
   _proto.multiply = function multiply(other) {
-    !currencyEquals(this.quoteCurrency, other.baseCurrency) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
+    !currencyEquals(this.quoteCurrency, other.baseCurrency) ?  invariant(false, 'TOKEN')  : void 0;
 
     var fraction = _Fraction.prototype.multiply.call(this, other);
 
@@ -966,7 +969,7 @@ var Price = /*#__PURE__*/function (_Fraction) {
   ;
 
   _proto.quote = function quote(currencyAmount) {
-    !currencyEquals(currencyAmount.currency, this.baseCurrency) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
+    !currencyEquals(currencyAmount.currency, this.baseCurrency) ?  invariant(false, 'TOKEN')  : void 0;
 
     if (this.quoteCurrency instanceof Token) {
       return new TokenAmount(this.quoteCurrency, _Fraction.prototype.multiply.call(this, currencyAmount.raw).quotient);
@@ -1036,7 +1039,7 @@ var Pair = /*#__PURE__*/function () {
     if (((_PAIR_ADDRESS_CACHE = PAIR_ADDRESS_CACHE) == null ? void 0 : (_PAIR_ADDRESS_CACHE$t = _PAIR_ADDRESS_CACHE[tokens[0].address]) == null ? void 0 : _PAIR_ADDRESS_CACHE$t[tokens[1].address]) === undefined) {
       var _PAIR_ADDRESS_CACHE2, _FACTORY_AND_INIT$tok, _tokens$, _FACTORY_AND_INIT$tok2, _tokens$2, _extends2, _extends3;
 
-      PAIR_ADDRESS_CACHE = _extends({}, PAIR_ADDRESS_CACHE, (_extends3 = {}, _extends3[tokens[0].address] = _extends({}, (_PAIR_ADDRESS_CACHE2 = PAIR_ADDRESS_CACHE) == null ? void 0 : _PAIR_ADDRESS_CACHE2[tokens[0].address], (_extends2 = {}, _extends2[tokens[1].address] = getCreate2Address((_FACTORY_AND_INIT$tok = FACTORY_AND_INIT[(_tokens$ = tokens[0]) == null ? void 0 : _tokens$.chainId]) == null ? void 0 : _FACTORY_AND_INIT$tok.factoryAddress, keccak256(['bytes'], [pack(['address', 'address'], [tokens[0].address, tokens[1].address])]), (_FACTORY_AND_INIT$tok2 = FACTORY_AND_INIT[(_tokens$2 = tokens[0]) == null ? void 0 : _tokens$2.chainId]) == null ? void 0 : _FACTORY_AND_INIT$tok2.initCodeHash), _extends2)), _extends3));
+      PAIR_ADDRESS_CACHE = _extends({}, PAIR_ADDRESS_CACHE, (_extends3 = {}, _extends3[tokens[0].address] = _extends({}, (_PAIR_ADDRESS_CACHE2 = PAIR_ADDRESS_CACHE) == null ? void 0 : _PAIR_ADDRESS_CACHE2[tokens[0].address], (_extends2 = {}, _extends2[tokens[1].address] = address.getCreate2Address((_FACTORY_AND_INIT$tok = FACTORY_AND_INIT[(_tokens$ = tokens[0]) == null ? void 0 : _tokens$.chainId]) == null ? void 0 : _FACTORY_AND_INIT$tok.factoryAddress, solidity.keccak256(['bytes'], [solidity.pack(['address', 'address'], [tokens[0].address, tokens[1].address])]), (_FACTORY_AND_INIT$tok2 = FACTORY_AND_INIT[(_tokens$2 = tokens[0]) == null ? void 0 : _tokens$2.chainId]) == null ? void 0 : _FACTORY_AND_INIT$tok2.initCodeHash), _extends2)), _extends3));
     }
 
     return PAIR_ADDRESS_CACHE[tokens[0].address][tokens[1].address];
@@ -1062,7 +1065,7 @@ var Pair = /*#__PURE__*/function () {
    * @param token token to return price of
    */
   _proto.priceOf = function priceOf(token) {
-    !this.involvesToken(token) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
+    !this.involvesToken(token) ?  invariant(false, 'TOKEN')  : void 0;
     return token.equals(this.token0) ? this.token0Price : this.token1Price;
   }
   /**
@@ -1071,12 +1074,12 @@ var Pair = /*#__PURE__*/function () {
   ;
 
   _proto.reserveOf = function reserveOf(token) {
-    !this.involvesToken(token) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
+    !this.involvesToken(token) ?  invariant(false, 'TOKEN')  : void 0;
     return token.equals(this.token0) ? this.reserve0 : this.reserve1;
   };
 
   _proto.getOutputAmount = function getOutputAmount(inputAmount) {
-    !this.involvesToken(inputAmount.token) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
+    !this.involvesToken(inputAmount.token) ?  invariant(false, 'TOKEN')  : void 0;
 
     if (JSBI.equal(this.reserve0.raw, ZERO) || JSBI.equal(this.reserve1.raw, ZERO)) {
       throw new InsufficientReservesError();
@@ -1097,7 +1100,7 @@ var Pair = /*#__PURE__*/function () {
   };
 
   _proto.getInputAmount = function getInputAmount(outputAmount) {
-    !this.involvesToken(outputAmount.token) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
+    !this.involvesToken(outputAmount.token) ?  invariant(false, 'TOKEN')  : void 0;
 
     if (JSBI.equal(this.reserve0.raw, ZERO) || JSBI.equal(this.reserve1.raw, ZERO) || JSBI.greaterThanOrEqual(outputAmount.raw, this.reserveOf(outputAmount.token).raw)) {
       throw new InsufficientReservesError();
@@ -1112,10 +1115,10 @@ var Pair = /*#__PURE__*/function () {
   };
 
   _proto.getLiquidityMinted = function getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB) {
-    !totalSupply.token.equals(this.liquidityToken) ? process.env.NODE_ENV !== "production" ? invariant(false, 'LIQUIDITY') : invariant(false) : void 0;
+    !totalSupply.token.equals(this.liquidityToken) ?  invariant(false, 'LIQUIDITY')  : void 0;
     var tokenAmounts = tokenAmountA.token.sortsBefore(tokenAmountB.token) // does safety checks
     ? [tokenAmountA, tokenAmountB] : [tokenAmountB, tokenAmountA];
-    !(tokenAmounts[0].token.equals(this.token0) && tokenAmounts[1].token.equals(this.token1)) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
+    !(tokenAmounts[0].token.equals(this.token0) && tokenAmounts[1].token.equals(this.token1)) ?  invariant(false, 'TOKEN')  : void 0;
     var liquidity;
 
     if (JSBI.equal(totalSupply.raw, ZERO)) {
@@ -1138,16 +1141,16 @@ var Pair = /*#__PURE__*/function () {
       feeOn = false;
     }
 
-    !this.involvesToken(token) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOKEN') : invariant(false) : void 0;
-    !totalSupply.token.equals(this.liquidityToken) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TOTAL_SUPPLY') : invariant(false) : void 0;
-    !liquidity.token.equals(this.liquidityToken) ? process.env.NODE_ENV !== "production" ? invariant(false, 'LIQUIDITY') : invariant(false) : void 0;
-    !JSBI.lessThanOrEqual(liquidity.raw, totalSupply.raw) ? process.env.NODE_ENV !== "production" ? invariant(false, 'LIQUIDITY') : invariant(false) : void 0;
+    !this.involvesToken(token) ?  invariant(false, 'TOKEN')  : void 0;
+    !totalSupply.token.equals(this.liquidityToken) ?  invariant(false, 'TOTAL_SUPPLY')  : void 0;
+    !liquidity.token.equals(this.liquidityToken) ?  invariant(false, 'LIQUIDITY')  : void 0;
+    !JSBI.lessThanOrEqual(liquidity.raw, totalSupply.raw) ?  invariant(false, 'LIQUIDITY')  : void 0;
     var totalSupplyAdjusted;
 
     if (!feeOn) {
       totalSupplyAdjusted = totalSupply;
     } else {
-      !!!kLast ? process.env.NODE_ENV !== "production" ? invariant(false, 'K_LAST') : invariant(false) : void 0;
+      !!!kLast ?  invariant(false, 'K_LAST')  : void 0;
       var kLastParsed = parseBigintIsh(kLast);
 
       if (!JSBI.equal(kLastParsed, ZERO)) {
@@ -1216,12 +1219,12 @@ var Pair = /*#__PURE__*/function () {
 
 var Route = /*#__PURE__*/function () {
   function Route(pairs, input, output) {
-    !(pairs.length > 0) ? process.env.NODE_ENV !== "production" ? invariant(false, 'PAIRS') : invariant(false) : void 0;
+    !(pairs.length > 0) ?  invariant(false, 'PAIRS')  : void 0;
     !pairs.every(function (pair) {
       return pair.chainId === pairs[0].chainId;
-    }) ? process.env.NODE_ENV !== "production" ? invariant(false, 'CHAIN_IDS') : invariant(false) : void 0;
-    !(input instanceof Token && pairs[0].involvesToken(input) || ETHER_CURRENCIES.includes(input) && pairs[0].involvesToken(WETH[pairs[0].chainId])) ? process.env.NODE_ENV !== "production" ? invariant(false, 'INPUT') : invariant(false) : void 0;
-    !(typeof output === 'undefined' || output instanceof Token && pairs[pairs.length - 1].involvesToken(output) || ETHER_CURRENCIES.includes(output) && pairs[pairs.length - 1].involvesToken(WETH[pairs[0].chainId])) ? process.env.NODE_ENV !== "production" ? invariant(false, 'OUTPUT') : invariant(false) : void 0;
+    }) ?  invariant(false, 'CHAIN_IDS')  : void 0;
+    !(input instanceof Token && pairs[0].involvesToken(input) || ETHER_CURRENCIES.includes(input) && pairs[0].involvesToken(WETH[pairs[0].chainId])) ?  invariant(false, 'INPUT')  : void 0;
+    !(typeof output === 'undefined' || output instanceof Token && pairs[pairs.length - 1].involvesToken(output) || ETHER_CURRENCIES.includes(output) && pairs[pairs.length - 1].involvesToken(WETH[pairs[0].chainId])) ?  invariant(false, 'OUTPUT')  : void 0;
     var path = [input instanceof Token ? input : WETH[pairs[0].chainId]];
 
     for (var _iterator = _createForOfIteratorHelperLoose(pairs.entries()), _step; !(_step = _iterator()).done;) {
@@ -1229,7 +1232,7 @@ var Route = /*#__PURE__*/function () {
           i = _step$value[0],
           pair = _step$value[1];
       var currentInput = path[i];
-      !(currentInput.equals(pair.token0) || currentInput.equals(pair.token1)) ? process.env.NODE_ENV !== "production" ? invariant(false, 'PATH') : invariant(false) : void 0;
+      !(currentInput.equals(pair.token0) || currentInput.equals(pair.token1)) ?  invariant(false, 'PATH')  : void 0;
 
       var _output = currentInput.equals(pair.token0) ? pair.token1 : pair.token0;
 
@@ -1301,8 +1304,8 @@ function computePriceImpact(midPrice, inputAmount, outputAmount) {
 
 function inputOutputComparator(a, b) {
   // must have same input and output token for comparison
-  !currencyEquals(a.inputAmount.currency, b.inputAmount.currency) ? process.env.NODE_ENV !== "production" ? invariant(false, 'INPUT_CURRENCY') : invariant(false) : void 0;
-  !currencyEquals(a.outputAmount.currency, b.outputAmount.currency) ? process.env.NODE_ENV !== "production" ? invariant(false, 'OUTPUT_CURRENCY') : invariant(false) : void 0;
+  !currencyEquals(a.inputAmount.currency, b.inputAmount.currency) ?  invariant(false, 'INPUT_CURRENCY')  : void 0;
+  !currencyEquals(a.outputAmount.currency, b.outputAmount.currency) ?  invariant(false, 'OUTPUT_CURRENCY')  : void 0;
 
   if (a.outputAmount.equalTo(b.outputAmount)) {
     if (a.inputAmount.equalTo(b.inputAmount)) {
@@ -1355,7 +1358,7 @@ function wrappedAmount(currencyAmount, chainId) {
     return new TokenAmount(WETH[chainId], currencyAmount.raw);
   }
 
-   process.env.NODE_ENV !== "production" ? invariant(false, 'CURRENCY') : invariant(false) ;
+    invariant(false, 'CURRENCY')  ;
 }
 
 function wrappedCurrency(currency, chainId) {
@@ -1365,7 +1368,7 @@ function wrappedCurrency(currency, chainId) {
     return WETH[chainId];
   }
 
-   process.env.NODE_ENV !== "production" ? invariant(false, 'CURRENCY') : invariant(false) ;
+    invariant(false, 'CURRENCY')  ;
 }
 /**
  * Represents a trade executed against a list of pairs.
@@ -1378,8 +1381,8 @@ var Trade = /*#__PURE__*/function () {
     var amounts = new Array(route.path.length);
     var nextPairs = new Array(route.pairs.length);
 
-    if (tradeType === TradeType.EXACT_INPUT) {
-      !currencyEquals(amount.currency, route.input) ? process.env.NODE_ENV !== "production" ? invariant(false, 'INPUT') : invariant(false) : void 0;
+    if (tradeType === exports.TradeType.EXACT_INPUT) {
+      !currencyEquals(amount.currency, route.input) ?  invariant(false, 'INPUT')  : void 0;
       amounts[0] = wrappedAmount(amount, route.chainId);
 
       for (var i = 0; i < route.path.length - 1; i++) {
@@ -1393,7 +1396,7 @@ var Trade = /*#__PURE__*/function () {
         nextPairs[i] = nextPair;
       }
     } else {
-      !currencyEquals(amount.currency, route.output) ? process.env.NODE_ENV !== "production" ? invariant(false, 'OUTPUT') : invariant(false) : void 0;
+      !currencyEquals(amount.currency, route.output) ?  invariant(false, 'OUTPUT')  : void 0;
       amounts[amounts.length - 1] = wrappedAmount(amount, route.chainId);
 
       for (var _i = route.path.length - 1; _i > 0; _i--) {
@@ -1410,8 +1413,8 @@ var Trade = /*#__PURE__*/function () {
 
     this.route = route;
     this.tradeType = tradeType;
-    this.inputAmount = tradeType === TradeType.EXACT_INPUT ? amount : ETHER_CURRENCIES.includes(route.input) ? CurrencyAmount.ether(amounts[0].raw, route.chainId) : amounts[0];
-    this.outputAmount = tradeType === TradeType.EXACT_OUTPUT ? amount : ETHER_CURRENCIES.includes(route.output) ? CurrencyAmount.ether(amounts[amounts.length - 1].raw, route.chainId) : amounts[amounts.length - 1];
+    this.inputAmount = tradeType === exports.TradeType.EXACT_INPUT ? amount : ETHER_CURRENCIES.includes(route.input) ? CurrencyAmount.ether(amounts[0].raw, route.chainId) : amounts[0];
+    this.outputAmount = tradeType === exports.TradeType.EXACT_OUTPUT ? amount : ETHER_CURRENCIES.includes(route.output) ? CurrencyAmount.ether(amounts[amounts.length - 1].raw, route.chainId) : amounts[amounts.length - 1];
     this.executionPrice = new Price(this.inputAmount.currency, this.outputAmount.currency, this.inputAmount.raw, this.outputAmount.raw);
     this.nextMidPrice = Price.fromRoute(new Route(nextPairs, route.input));
     this.priceImpact = computePriceImpact(route.midPrice, this.inputAmount, this.outputAmount);
@@ -1424,7 +1427,7 @@ var Trade = /*#__PURE__*/function () {
 
 
   Trade.exactIn = function exactIn(route, amountIn) {
-    return new Trade(route, amountIn, TradeType.EXACT_INPUT);
+    return new Trade(route, amountIn, exports.TradeType.EXACT_INPUT);
   }
   /**
    * Constructs an exact out trade with the given amount out and route
@@ -1434,7 +1437,7 @@ var Trade = /*#__PURE__*/function () {
   ;
 
   Trade.exactOut = function exactOut(route, amountOut) {
-    return new Trade(route, amountOut, TradeType.EXACT_OUTPUT);
+    return new Trade(route, amountOut, exports.TradeType.EXACT_OUTPUT);
   }
   /**
    * Get the minimum amount that must be received from this trade for the given slippage tolerance
@@ -1445,9 +1448,9 @@ var Trade = /*#__PURE__*/function () {
   var _proto = Trade.prototype;
 
   _proto.minimumAmountOut = function minimumAmountOut(slippageTolerance) {
-    !!slippageTolerance.lessThan(ZERO) ? process.env.NODE_ENV !== "production" ? invariant(false, 'SLIPPAGE_TOLERANCE') : invariant(false) : void 0;
+    !!slippageTolerance.lessThan(ZERO) ?  invariant(false, 'SLIPPAGE_TOLERANCE')  : void 0;
 
-    if (this.tradeType === TradeType.EXACT_OUTPUT) {
+    if (this.tradeType === exports.TradeType.EXACT_OUTPUT) {
       return this.outputAmount;
     } else {
       var slippageAdjustedAmountOut = new Fraction(ONE).add(slippageTolerance).invert().multiply(this.outputAmount.raw).quotient;
@@ -1461,9 +1464,9 @@ var Trade = /*#__PURE__*/function () {
   ;
 
   _proto.maximumAmountIn = function maximumAmountIn(slippageTolerance) {
-    !!slippageTolerance.lessThan(ZERO) ? process.env.NODE_ENV !== "production" ? invariant(false, 'SLIPPAGE_TOLERANCE') : invariant(false) : void 0;
+    !!slippageTolerance.lessThan(ZERO) ?  invariant(false, 'SLIPPAGE_TOLERANCE')  : void 0;
 
-    if (this.tradeType === TradeType.EXACT_INPUT) {
+    if (this.tradeType === exports.TradeType.EXACT_INPUT) {
       return this.inputAmount;
     } else {
       var slippageAdjustedAmountIn = new Fraction(ONE).add(slippageTolerance).multiply(this.inputAmount.raw).quotient;
@@ -1506,11 +1509,11 @@ var Trade = /*#__PURE__*/function () {
       bestTrades = [];
     }
 
-    !(pairs.length > 0) ? process.env.NODE_ENV !== "production" ? invariant(false, 'PAIRS') : invariant(false) : void 0;
-    !(maxHops > 0) ? process.env.NODE_ENV !== "production" ? invariant(false, 'MAX_HOPS') : invariant(false) : void 0;
-    !(originalAmountIn === currencyAmountIn || currentPairs.length > 0) ? process.env.NODE_ENV !== "production" ? invariant(false, 'INVALID_RECURSION') : invariant(false) : void 0;
+    !(pairs.length > 0) ?  invariant(false, 'PAIRS')  : void 0;
+    !(maxHops > 0) ?  invariant(false, 'MAX_HOPS')  : void 0;
+    !(originalAmountIn === currencyAmountIn || currentPairs.length > 0) ?  invariant(false, 'INVALID_RECURSION')  : void 0;
     var chainId = currencyAmountIn instanceof TokenAmount ? currencyAmountIn.token.chainId : currencyOut instanceof Token ? currencyOut.chainId : undefined;
-    !(chainId !== undefined) ? process.env.NODE_ENV !== "production" ? invariant(false, 'CHAIN_ID') : invariant(false) : void 0;
+    !(chainId !== undefined) ?  invariant(false, 'CHAIN_ID')  : void 0;
     var amountIn = wrappedAmount(currencyAmountIn, chainId);
     var tokenOut = wrappedCurrency(currencyOut, chainId);
 
@@ -1538,7 +1541,7 @@ var Trade = /*#__PURE__*/function () {
 
 
       if (amountOut.token.equals(tokenOut)) {
-        sortedInsert(bestTrades, new Trade(new Route([].concat(currentPairs, [pair]), originalAmountIn.currency, currencyOut), originalAmountIn, TradeType.EXACT_INPUT), maxNumResults, tradeComparator);
+        sortedInsert(bestTrades, new Trade(new Route([].concat(currentPairs, [pair]), originalAmountIn.currency, currencyOut), originalAmountIn, exports.TradeType.EXACT_INPUT), maxNumResults, tradeComparator);
       } else if (maxHops > 1 && pairs.length > 1) {
         var pairsExcludingThisPair = pairs.slice(0, i).concat(pairs.slice(i + 1, pairs.length)); // otherwise, consider all the other paths that lead from this token as long as we have not exceeded maxHops
 
@@ -1588,11 +1591,11 @@ var Trade = /*#__PURE__*/function () {
       bestTrades = [];
     }
 
-    !(pairs.length > 0) ? process.env.NODE_ENV !== "production" ? invariant(false, 'PAIRS') : invariant(false) : void 0;
-    !(maxHops > 0) ? process.env.NODE_ENV !== "production" ? invariant(false, 'MAX_HOPS') : invariant(false) : void 0;
-    !(originalAmountOut === currencyAmountOut || currentPairs.length > 0) ? process.env.NODE_ENV !== "production" ? invariant(false, 'INVALID_RECURSION') : invariant(false) : void 0;
+    !(pairs.length > 0) ?  invariant(false, 'PAIRS')  : void 0;
+    !(maxHops > 0) ?  invariant(false, 'MAX_HOPS')  : void 0;
+    !(originalAmountOut === currencyAmountOut || currentPairs.length > 0) ?  invariant(false, 'INVALID_RECURSION')  : void 0;
     var chainId = currencyAmountOut instanceof TokenAmount ? currencyAmountOut.token.chainId : currencyIn instanceof Token ? currencyIn.chainId : undefined;
-    !(chainId !== undefined) ? process.env.NODE_ENV !== "production" ? invariant(false, 'CHAIN_ID') : invariant(false) : void 0;
+    !(chainId !== undefined) ?  invariant(false, 'CHAIN_ID')  : void 0;
     var amountOut = wrappedAmount(currencyAmountOut, chainId);
     var tokenIn = wrappedCurrency(currencyIn, chainId);
 
@@ -1620,7 +1623,7 @@ var Trade = /*#__PURE__*/function () {
 
 
       if (amountIn.token.equals(tokenIn)) {
-        sortedInsert(bestTrades, new Trade(new Route([pair].concat(currentPairs), currencyIn, originalAmountOut.currency), originalAmountOut, TradeType.EXACT_OUTPUT), maxNumResults, tradeComparator);
+        sortedInsert(bestTrades, new Trade(new Route([pair].concat(currentPairs), currencyIn, originalAmountOut.currency), originalAmountOut, exports.TradeType.EXACT_OUTPUT), maxNumResults, tradeComparator);
       } else if (maxHops > 1 && pairs.length > 1) {
         var pairsExcludingThisPair = pairs.slice(0, i).concat(pairs.slice(i + 1, pairs.length)); // otherwise, consider all the other paths that arrive at this token as long as we have not exceeded maxHops
 
@@ -1662,8 +1665,8 @@ var Router = /*#__PURE__*/function () {
     var etherIn = ETHER_CURRENCIES.includes(trade.inputAmount.currency);
     var etherOut = ETHER_CURRENCIES.includes(trade.outputAmount.currency); // the router does not support both ether in and out
 
-    !!(etherIn && etherOut) ? process.env.NODE_ENV !== "production" ? invariant(false, 'ETHER_IN_OUT') : invariant(false) : void 0;
-    !(!('ttl' in options) || options.ttl > 0) ? process.env.NODE_ENV !== "production" ? invariant(false, 'TTL') : invariant(false) : void 0;
+    !!(etherIn && etherOut) ?  invariant(false, 'ETHER_IN_OUT')  : void 0;
+    !(!('ttl' in options) || options.ttl > 0) ?  invariant(false, 'TTL')  : void 0;
     var to = validateAndParseAddress(options.recipient);
     var amountIn = toHex(trade.maximumAmountIn(options.allowedSlippage));
     var amountOut = toHex(trade.minimumAmountOut(options.allowedSlippage));
@@ -1677,7 +1680,7 @@ var Router = /*#__PURE__*/function () {
     var value;
 
     switch (trade.tradeType) {
-      case TradeType.EXACT_INPUT:
+      case exports.TradeType.EXACT_INPUT:
         if (etherIn) {
           methodName = useFeeOnTransfer ? 'swapExactETHForTokensSupportingFeeOnTransferTokens' : 'swapExactETHForTokens'; // (uint amountOutMin, address[] calldata path, address to, uint deadline)
 
@@ -1697,8 +1700,8 @@ var Router = /*#__PURE__*/function () {
 
         break;
 
-      case TradeType.EXACT_OUTPUT:
-        !!useFeeOnTransfer ? process.env.NODE_ENV !== "production" ? invariant(false, 'EXACT_OUT_FOT') : invariant(false) : void 0;
+      case exports.TradeType.EXACT_OUTPUT:
+        !!useFeeOnTransfer ?  invariant(false, 'EXACT_OUT_FOT')  : void 0;
 
         if (etherIn) {
           methodName = 'swapETHForExactTokens'; // (uint amountOut, address[] calldata path, address to, uint deadline)
@@ -1822,9 +1825,9 @@ var runtime = (function (exports) {
   // This is a polyfill for %IteratorPrototype% for environments that
   // don't natively support it.
   var IteratorPrototype = {};
-  IteratorPrototype[iteratorSymbol] = function () {
+  define(IteratorPrototype, iteratorSymbol, function () {
     return this;
-  };
+  });
 
   var getProto = Object.getPrototypeOf;
   var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
@@ -1838,8 +1841,9 @@ var runtime = (function (exports) {
 
   var Gp = GeneratorFunctionPrototype.prototype =
     Generator.prototype = Object.create(IteratorPrototype);
-  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
-  GeneratorFunctionPrototype.constructor = GeneratorFunction;
+  GeneratorFunction.prototype = GeneratorFunctionPrototype;
+  define(Gp, "constructor", GeneratorFunctionPrototype);
+  define(GeneratorFunctionPrototype, "constructor", GeneratorFunction);
   GeneratorFunction.displayName = define(
     GeneratorFunctionPrototype,
     toStringTagSymbol,
@@ -1953,9 +1957,9 @@ var runtime = (function (exports) {
   }
 
   defineIteratorMethods(AsyncIterator.prototype);
-  AsyncIterator.prototype[asyncIteratorSymbol] = function () {
+  define(AsyncIterator.prototype, asyncIteratorSymbol, function () {
     return this;
-  };
+  });
   exports.AsyncIterator = AsyncIterator;
 
   // Note that simple async functions are implemented on top of
@@ -2148,13 +2152,13 @@ var runtime = (function (exports) {
   // iterator prototype chain incorrectly implement this, causing the Generator
   // object to not be returned from this call. This ensures that doesn't happen.
   // See https://github.com/facebook/regenerator/issues/274 for more details.
-  Gp[iteratorSymbol] = function() {
+  define(Gp, iteratorSymbol, function() {
     return this;
-  };
+  });
 
-  Gp.toString = function() {
+  define(Gp, "toString", function() {
     return "[object Generator]";
-  };
+  });
 
   function pushTryEntry(locs) {
     var entry = { tryLoc: locs[0] };
@@ -2473,14 +2477,19 @@ try {
 } catch (accidentalStrictMode) {
   // This module should not be running in strict mode, so the above
   // assignment should always work unless something is misconfigured. Just
-  // in case runtime.js accidentally runs in strict mode, we can escape
+  // in case runtime.js accidentally runs in strict mode, in modern engines
+  // we can explicitly access globalThis. In older engines we can escape
   // strict mode using a global Function call. This could conceivably fail
   // if a Content Security Policy forbids using Function, but in that case
   // the proper solution is to fix the accidental strict mode problem. If
   // you've misconfigured your bundler to force strict mode and applied a
   // CSP to forbid Function, and you're not willing to fix either of those
   // problems, please detail your unique predicament in a GitHub issue.
-  Function("r", "regeneratorRuntime = r")(runtime);
+  if (typeof globalThis === "object") {
+    globalThis.regeneratorRuntime = runtime;
+  } else {
+    Function("r", "regeneratorRuntime = r")(runtime);
+  }
 }
 });
 
@@ -2522,7 +2531,7 @@ var ERC20 = [
 ];
 
 var _TOKEN_DECIMALS_CACHE;
-var TOKEN_DECIMALS_CACHE = (_TOKEN_DECIMALS_CACHE = {}, _TOKEN_DECIMALS_CACHE[ChainId.MAINNET] = {
+var TOKEN_DECIMALS_CACHE = (_TOKEN_DECIMALS_CACHE = {}, _TOKEN_DECIMALS_CACHE[exports.ChainId.MAINNET] = {
   '0xE0B7927c4aF23765Cb51314A0E0521A9645F0E2A': 9 // DGD
 
 }, _TOKEN_DECIMALS_CACHE);
@@ -2557,7 +2566,7 @@ var Fetcher = /*#__PURE__*/function () {
           switch (_context.prev = _context.next) {
             case 0:
               if (provider === void 0) {
-                provider = /*#__PURE__*/getDefaultProvider( /*#__PURE__*/getNetwork(chainId));
+                provider = /*#__PURE__*/providers.getDefaultProvider( /*#__PURE__*/networks.getNetwork(chainId));
               }
 
               if (!(typeof ((_TOKEN_DECIMALS_CACHE2 = TOKEN_DECIMALS_CACHE) == null ? void 0 : (_TOKEN_DECIMALS_CACHE3 = _TOKEN_DECIMALS_CACHE2[chainId]) == null ? void 0 : _TOKEN_DECIMALS_CACHE3[address]) === 'number')) {
@@ -2571,7 +2580,7 @@ var Fetcher = /*#__PURE__*/function () {
 
             case 5:
               _context.next = 7;
-              return new Contract(address, ERC20, provider).decimals().then(function (decimals) {
+              return new contracts.Contract(address, ERC20, provider).decimals().then(function (decimals) {
                 var _TOKEN_DECIMALS_CACHE4, _extends2, _extends3;
 
                 TOKEN_DECIMALS_CACHE = _extends({}, TOKEN_DECIMALS_CACHE, (_extends3 = {}, _extends3[chainId] = _extends({}, (_TOKEN_DECIMALS_CACHE4 = TOKEN_DECIMALS_CACHE) == null ? void 0 : _TOKEN_DECIMALS_CACHE4[chainId], (_extends2 = {}, _extends2[address] = decimals, _extends2)), _extends3));
@@ -2618,13 +2627,13 @@ var Fetcher = /*#__PURE__*/function () {
           switch (_context2.prev = _context2.next) {
             case 0:
               if (provider === void 0) {
-                provider = /*#__PURE__*/getDefaultProvider( /*#__PURE__*/getNetwork(tokenA.chainId));
+                provider = /*#__PURE__*/providers.getDefaultProvider( /*#__PURE__*/networks.getNetwork(tokenA.chainId));
               }
 
-              !(tokenA.chainId === tokenB.chainId) ? process.env.NODE_ENV !== "production" ? invariant(false, 'CHAIN_ID') : invariant(false) : void 0;
+              !(tokenA.chainId === tokenB.chainId) ?  invariant(false, 'CHAIN_ID')  : void 0;
               address = Pair.getAddress(tokenA, tokenB);
               _context2.next = 5;
-              return new Contract(address, IUniswapV2Pair.abi, provider).getReserves();
+              return new contracts.Contract(address, IUniswapV2Pair.abi, provider).getReserves();
 
             case 5:
               _yield$Contract$getRe = _context2.sent;
@@ -2651,5 +2660,49 @@ var Fetcher = /*#__PURE__*/function () {
   return Fetcher;
 }();
 
-export { AVAX, BNB, CHAIN_IDS_AND_CURRENCIES, CRO, ChainId, Currency, CurrencyAmount, DEV, ETHER, ETHERSCAN_PREFIXES, ETHER_CURRENCIES, ETHER_NAMES_CURRENCIES, FACTORY_ADDRESS, FACTORY_AND_INIT, FTM, Fetcher, Fraction, GLMR, HECO, INIT_CODE_HASH, IOTX, InsufficientInputAmountError, InsufficientReservesError, MATIC, METIS, MINIMUM_LIQUIDITY, MOVR, MTV, NETWORK_LABELS, NETWORK_SYMBOLS, OKT, ONE$1 as ONE, Pair, Percent, Price, Rounding, Route, Router, SDN, Token, TokenAmount, Trade, TradeType, WETH, currencyEquals, inputOutputComparator, tradeComparator };
-//# sourceMappingURL=sdk.esm.js.map
+exports.JSBI = JSBI;
+exports.AVAX = AVAX;
+exports.BNB = BNB;
+exports.CHAIN_IDS_AND_CURRENCIES = CHAIN_IDS_AND_CURRENCIES;
+exports.CRO = CRO;
+exports.Currency = Currency;
+exports.CurrencyAmount = CurrencyAmount;
+exports.DEV = DEV;
+exports.ETHER = ETHER;
+exports.ETHERSCAN_PREFIXES = ETHERSCAN_PREFIXES;
+exports.ETHER_CURRENCIES = ETHER_CURRENCIES;
+exports.ETHER_NAMES_CURRENCIES = ETHER_NAMES_CURRENCIES;
+exports.FACTORY_ADDRESS = FACTORY_ADDRESS;
+exports.FACTORY_AND_INIT = FACTORY_AND_INIT;
+exports.FTM = FTM;
+exports.Fetcher = Fetcher;
+exports.Fraction = Fraction;
+exports.GLMR = GLMR;
+exports.HECO = HECO;
+exports.INIT_CODE_HASH = INIT_CODE_HASH;
+exports.IOTX = IOTX;
+exports.InsufficientInputAmountError = InsufficientInputAmountError;
+exports.InsufficientReservesError = InsufficientReservesError;
+exports.MATIC = MATIC;
+exports.METIS = METIS;
+exports.MINIMUM_LIQUIDITY = MINIMUM_LIQUIDITY;
+exports.MOVR = MOVR;
+exports.MTV = MTV;
+exports.NETWORK_LABELS = NETWORK_LABELS;
+exports.NETWORK_SYMBOLS = NETWORK_SYMBOLS;
+exports.OKT = OKT;
+exports.ONE = ONE$1;
+exports.Pair = Pair;
+exports.Percent = Percent;
+exports.Price = Price;
+exports.Route = Route;
+exports.Router = Router;
+exports.SDN = SDN;
+exports.Token = Token;
+exports.TokenAmount = TokenAmount;
+exports.Trade = Trade;
+exports.WETH = WETH;
+exports.currencyEquals = currencyEquals;
+exports.inputOutputComparator = inputOutputComparator;
+exports.tradeComparator = tradeComparator;
+//# sourceMappingURL=bridgesdk.cjs.development.js.map
