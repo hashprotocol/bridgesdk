@@ -44,6 +44,9 @@ export class CurrencyAmount extends Fraction {
     if (chainId && chainId === ChainId.FANTOM) {
       currency = FTM;
     }
+    if (chainId && chainId === ChainId.ALGORAND) {
+      currency = ALGO;
+    }
     if (chainId && chainId === ChainId.SHIDEN) {
       currency = SDN;
     }

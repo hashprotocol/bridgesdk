@@ -27,6 +27,7 @@ export class Blockchain {
   public static readonly MATIC: Blockchain = new Blockchain(18, 'MATIC', 'Matic (Mainnet)')
   public static readonly HECO: Blockchain = new Blockchain(18, 'HT', 'Heco (Mainnet)')
   public static readonly FANTOM: Blockchain = new Blockchain(18, 'FTM', 'Fantom (Mainnet)')
+  public static readonly ALGORAND: Blockchain = new Blockchain(18, 'ALGO', 'Algorand (Mainnet)')
   public static readonly SHIDEN: Blockchain = new Blockchain(18, 'SDN', 'Shiden Network')
   public static readonly IOTEX: Blockchain = new Blockchain(18, 'IOTX', 'IoTex Network')
   public static readonly HARMONY: Blockchain = new Blockchain(18, 'ONE', 'Harmony Network')
@@ -59,6 +60,7 @@ const MUMBAI = Blockchain.MUMBAI
 const MATIC = Blockchain.MATIC
 const HECO = Blockchain.HECO
 const FANTOM = Blockchain.FANTOM
+const ALGORAND = Blockchain.ALGORAND
 const SHIDEN = Blockchain.SHIDEN
 const IOTEX = Blockchain.IOTEX
 const HARMONY = Blockchain.HARMONY
@@ -70,6 +72,6 @@ const MOONBEAM = Blockchain.MOONBEAM
 
 export {
   ETHEREUM, AVALANCHE, SMART_CHAIN, MOONBASE_ALPHA, MUMBAI, MATIC,
-  HECO, FANTOM, SHIDEN, IOTEX, HARMONY, CRONOS, OKEX, MULTIVAC, METIS_NETWORK, MOONBEAM
+  HECO, FANTOM, ALGORAND, SHIDEN, IOTEX, HARMONY, CRONOS, OKEX, MULTIVAC, METIS_NETWORK, MOONBEAM
 }
 
