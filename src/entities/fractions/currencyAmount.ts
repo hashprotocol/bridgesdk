@@ -1,4 +1,4 @@
-import { AVAX, BNB, Currency, DEV, ETHER, HECO, MATIC, MOVR, FTM, SDN, IOTX, ONE, CRO, OKT, MTV, METIS, GLMR } from '../currency'
+import { AVAX, BNB, Currency, DEV, ETHER, HECO, MATIC, MOVR, FTM, ALGO, SDN, IOTX, ONE, CRO, OKT, MTV, METIS, GLMR } from '../currency'
 import { BigintIsh, ChainId, Rounding, SolidityType, TEN } from '../../constants'
 import { parseBigintIsh, validateSolidityTypeInstance } from '../../utils'
 
