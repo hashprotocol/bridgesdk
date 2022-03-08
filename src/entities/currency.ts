@@ -24,6 +24,7 @@ export class Currency {
   public static readonly HECO: Currency = new Currency(18, 'HT', 'HT')
   public static readonly MOVR: Currency = new Currency(18, 'MOVR', 'MOVR')
   public static readonly FTM: Currency = new Currency(18, 'FTM', 'FTM')
+  public static readonly ALGO: Currency = new Currency(18, 'ALGO', 'ALGO')
   public static readonly SDN: Currency = new Currency(18, 'SDN', 'SDN')
   public static readonly IOTX: Currency = new Currency(18, 'IOTX', 'IOTX')
   public static readonly ONE: Currency = new Currency(18, 'ONE', 'ONE')
@@ -56,6 +57,7 @@ export const MATIC = Currency.MATIC
 export const HECO = Currency.HECO
 export const MOVR = Currency.MOVR
 export const FTM = Currency.FTM
+export const ALGO = Currency.ALGO
 export const SDN = Currency.SDN
 export const IOTX = Currency.IOTX
 export const ONE = Currency.ONE
