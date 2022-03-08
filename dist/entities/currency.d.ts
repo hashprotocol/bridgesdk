@@ -19,6 +19,7 @@ export declare class Currency {
     static readonly HECO: Currency;
     static readonly MOVR: Currency;
     static readonly FTM: Currency;
+    static readonly ALGO: Currency;
     static readonly SDN: Currency;
     static readonly IOTX: Currency;
     static readonly ONE: Currency;
@@ -43,6 +44,7 @@ export declare const MATIC: Currency;
 export declare const HECO: Currency;
 export declare const MOVR: Currency;
 export declare const FTM: Currency;
+export declare const ALGO: Currency;
 export declare const SDN: Currency;
 export declare const IOTX: Currency;
 export declare const ONE: Currency;
