@@ -19,7 +19,7 @@ export enum ChainId {
   MATIC = 137,
   HECO = 128,
   FANTOM = 250,
-  ALGORAND = 250,
+  ALGORAND = 300,
   SHIDEN = 336,
   IOTEX = 4689,
   HARMONY = 1666600000,
